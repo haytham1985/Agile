@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agile Concepts Quiz</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-block:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .options button:hover:not(:disabled) {
+            background-color: #e9e9e9;
+        }
+
+        .options button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none; /* Initially hidden */
+        }
+
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+         /* Style for selected buttons */
+        .options button.selected.correct {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .options button.selected.incorrect {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+         /* Style to highlight the correct answer when wrong one is selected */
+        .options button.reveal-correct {
+            background-color: #d4edda; /* Light green background */
+            color: #155724;         /* Dark green text */
+            border: 1px solid #c3e6cb; /* Green border */
+            font-weight: bold;
+        }
+
+        /* Style for True/False buttons */
+        .options.true-false button {
+             width: 48%; /* Adjust width for two buttons */
+             display: inline-block; /* Display side by side */
+             text-align: center;
+        }
+
+        .options.true-false button:first-child {
+            margin-right: 4%; /* Space between buttons */
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <h1>Agile Concepts Quiz</h1>
+
+    <div class="quiz-container" id="quiz-container">
+        </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "According to the Agile Manifesto, which is valued *more*?",
+                type: "multiple-choice",
+                options: ["Processes and Tools", "Individuals and interactions", "Comprehensive Documentation", "Contract Negotiation"],
+                answer: "Individuals and interactions"
+            },
+            {
+                question: "Agile is a group of software development processes that are:",
+                type: "multiple-choice",
+                options: ["Predictive, Sequential, Externally-controlled", "Iterative, Incremental, Self-organizing", "Waterfall, V-model, Spiral", "Rigid, Document-driven, Centralized"],
+                answer: "Iterative, Incremental, Self-organizing"
+            },
+            {
+                question: "What is the highest priority in Agile according to principle 1?",
+                type: "multiple-choice",
+                options: ["Following a detailed plan", "Comprehensive documentation", "Satisfy the customer through early and continuous delivery of valuable software", "Contract negotiation"],
+                answer: "Satisfy the customer through early and continuous delivery of valuable software"
+            },
+             {
+                question: "Agile Principle 6 states that the most efficient and effective method of conveying information to and within a development team is:",
+                type: "multiple-choice",
+                options: ["Extensive documentation", "Email communication", "Face-to-face conversation", "Weekly reports"],
+                answer: "Face-to-face conversation"
+            },
+            {
+                question: "What is the primary measure of progress in Agile according to principle 7?",
+                type: "multiple-choice",
+                options: ["Time spent coding", "Number of documents produced", "Working software", "Adherence to the initial plan"],
+                answer: "Working software"
+            },
+            {
+                question: "Agile Principle 9 is about Simplicity, which is defined as:",
+                type: "multiple-choice",
+                options: ["Maximizing the amount of work done", "Maximizing the amount of work not done", "Writing complex code", "Creating detailed models"],
+                answer: "Maximizing the amount of work not done"
+            },
+             {
+                question: "Which of the following is NOT listed as an Agile Characteristic in the document?",
+                type: "multiple-choice",
+                options: ["Modularity on development process level", "Iterative with long cycles", "Time-bound with iteration cycles from one to six weeks", "People-oriented"],
+                answer: "Iterative with long cycles"
+            },
+            {
+                question: "According to the document, small incremental releases in Agile help to:",
+                type: "multiple-choice",
+                options: ["Delay the identification of issues", "Make it harder to respond to change", "Identify any issues early and make it easier to respond to change", "Increase documentation"],
+                answer: "Identify any issues early and make it easier to respond to change"
+            },
+             {
+                question: "Agility refers to:",
+                type: "multiple-choice",
+                options: ["Following a rigid plan", "Avoiding change", "Accept the changes", "Minimizing customer interaction"],
+                answer: "Accept the changes"
+            },
+            {
+                question: "Which of the following is NOT listed as an Agile Methodology in the document?",
+                type: "multiple-choice",
+                options: ["Extreme Programming (XP)", "Waterfall Model", "SCRUM", "Dynamic Systems Development Method (DSDM)"],
+                answer: "Waterfall Model"
+            },
+            {
+                question: "Extreme Programming (XP) methodology is best suited for use on:",
+                type: "multiple-choice",
+                options: ["Large, complex projects with fixed requirements", "New or incomplete projects where requirements are incomplete and expected to change frequently", "Projects requiring minimal customer interaction", "Projects with strict adherence to detailed upfront design"],
+                answer: "New or incomplete projects where requirements are incomplete and expected to change frequently"
+            },
+            {
+                question: "XP was designed for small project teams between:",
+                type: "multiple-choice",
+                options: ["Two to fifty team members", "Two to twelve team members", "Ten to twenty team members", "More than fifty team members"],
+                answer: "Two to twelve team members"
+            },
+            {
+                question: "Which of the following is NOT listed as an XP Value in the document?",
+                type: "multiple-choice",
+                options: ["Communication", "Documentation", "Simplicity", "Courage"],
+                answer: "Documentation"
+            },
+            {
+                question: "In XP, user requirements are expressed as:",
+                type: "multiple-choice",
+                options: ["Detailed specifications", "Use case diagrams", "Scenarios or user stories", "Flowcharts"],
+                answer: "Scenarios or user stories"
+            },
+            {
+                question: "What is refactoring in XP?",
+                type: "multiple-choice",
+                options: ["The process of adding new features to the code", "The process of fixing bugs in the code", "The process of code improvement where code is reorganised and rewritten to make it more efficient, easier to understand, etc.", "The process of writing tests before code"],
+                answer: "The process of code improvement where code is reorganised and rewritten to make it more efficient, easier to understand, etc."
+            },
+            {
+                question: "In XP, increments are delivered to customers every:",
+                type: "multiple-choice",
+                options: ["Day", "Week", "2 weeks", "Month"],
+                answer: "2 weeks"
+            },
+             {
+                question: "Test-first development involves:",
+                type: "multiple-choice",
+                options: ["Writing code before writing tests", "Writing tests and then writing code that makes the tests pass", "Writing documentation before writing code", "Testing only after all code is written"],
+                answer: "Writing tests and then writing code that makes the tests pass"
+            },
+             {
+                question: "Pair programming refers to the practice where:",
+                type: "multiple-choice",
+                options: ["One programmer writes code while another reviews it later", "Two programmers work independently on different modules", "Two programmers work together at one computer, collaborating on the same design, algorithm, code, or test", "Programmers work in isolation to avoid distractions"],
+                answer: "Two programmers work together at one computer, collaborating on the same design, algorithm, code, or test"
+            },
+            {
+                question: "What is the main idea of Scrum?",
+                type: "multiple-choice",
+                options: ["To strictly follow a predefined plan", "To acknowledge that systems development involves variables likely to change", "To minimize communication within the team", "To avoid customer feedback"],
+                answer: "To acknowledge that systems development involves variables likely to change"
+            },
+            {
+                question: "Scrum is a method suitable for small teams of less than:",
+                type: "multiple-choice",
+                options: ["5 persons", "10 persons", "20 persons", "50 persons"],
+                answer: "10 persons"
+            },
+            {
+                question: "In Scrum, who is responsible for creating and prioritizing the Product Backlog?",
+                type: "multiple-choice",
+                options: ["The Scrum Master", "The Development Team", "The Product Owner", "The Project Manager"],
+                answer: "The Product Owner"
+            },
+            {
+                question: "What is the primary role of the Scrum Master?",
+                type: "multiple-choice",
+                options: ["To manage the team's tasks", "To enforce the product iteration and goals, Scrum values and practices, and remove impediments", "To write user stories", "To perform testing"],
+                answer: "To enforce the product iteration and goals, Scrum values and practices, and remove impediments"
+            },
+            {
+                question: "What is the ideal size of a Scrum team according to the document?",
+                type: "multiple-choice",
+                options: ["Three, plus or minus one", "Seven, plus or minus two", "Ten, plus or minus three", "Fifteen, plus or minus five"],
+                answer: "Seven, plus or minus two"
+            },
+            {
+                question: "Software project management is the process of:",
+                type: "multiple-choice",
+                options: ["Only coding and testing", "Planning, organizing, staffing, monitoring, controlling and leading a software project", "Only documenting requirements", "Marketing and sales of software"],
+                answer: "Planning, organizing, staffing, monitoring, controlling and leading a software project"
+            },
+             {
+                question: "According to the document, agile methods are difficult to scale up to larger projects due to:",
+                type: "multiple-choice",
+                options: ["Too much focus on detailed design", "Lack of sufficient architecture planning", "Too much documentation", "Rigid processes"],
+                answer: "Lack of sufficient architecture planning"
+            },
+            {
+                question: "Large-scale agile involves additional concerns in interfacing with other organizational units such as:",
+                type: "multiple-choice",
+                options: ["Only the development team", "Human resources, Marketing and sales, product management", "Only the customer", "External vendors"],
+                answer: "Human resources, Marketing and sales, product management"
+            },
+            {
+                question: "What is the purpose of the proposed framework mentioned in the document (Dr. Atef Tayh Raslan's paper)?",
+                type: "multiple-choice",
+                options: ["To replace agile methodologies", "To introduce an approach for estimating agile projects in different scales", "To eliminate the need for documentation", "To standardize all agile practices"],
+                answer: "To introduce an approach for estimating agile projects in different scales"
+            },
+            {
+                question: "The proposed framework for effort estimation is based on mixing:",
+                type: "multiple-choice",
+                options: ["Waterfall and Agile methods", "Story point's method and COCOMO II method", "Scrum and XP", "Functional and Non-functional testing"],
+                answer: "Story point's method and COCOMO II method"
+            },
+            {
+                question: "What does the proposed framework utilize to increase estimation accuracy?",
+                type: "multiple-choice",
+                options: ["Expert judgment", "Historical data only", "The fuzzy inference system", "Random estimations"],
+                answer: "The fuzzy inference system"
+            },
+            {
+                question: "Agile software development methods are particularly designed to deal with:",
+                type: "multiple-choice",
+                options: ["Fixed requirements and certainty", "Change and uncertainty", "Large, unchanging teams", "Detailed upfront planning"],
+                answer: "Change and uncertainty"
+            },
+            {
+                question: "Software cost estimation is the set of techniques and procedures that organizations use to arrive at an estimate for:",
+                type: "multiple-choice",
+                options: ["Only budgeting", "Proposal bidding, project planning and probability estimates", "Only technical feasibility", "Only operational feasibility"],
+                answer: "Proposal bidding, project planning and probability estimates"
+            },
+            {
+                question: "The most widely used software estimation model in the world is:",
+                type: "multiple-choice",
+                options: ["Story points", "Function points", "COCOMO", "Planning poker"],
+                answer: "COCOMO"
+            },
+            {
+                question: "The COCOMO model predicts the effort and duration of a project based on inputs relating to:",
+                type: "multiple-choice",
+                options: ["Team motivation", "The size of the resulting systems and a number of \"cost drivers\" that affect productivity", "Customer satisfaction", "The number of meetings held"],
+                answer: "The size of the resulting systems and a number of \"cost drivers\" that affect productivity"
+            },
+            {
+                question: "The COCOMO model is defined in terms of three different models:",
+                type: "multiple-choice",
+                options: ["Agile, Waterfall, Iterative", "Basic, Intermediate, Complete", "Planning, Development, Deployment", "Small, Medium, Large"],
+                answer: "Basic, Intermediate, Complete"
+            },
+            {
+                question: "The Story Point's method refers to:",
+                type: "multiple-choice",
+                options: ["A unit for measuring time spent on a task", "A measuring unit to estimate the size of story in agile developments", "A metric for code complexity", "A way to track bugs"],
+                answer: "A measuring unit to estimate the size of story in agile developments"
+            },
+            {
+                question: "Story points are usually expressed by a sequence of numbers where each number is the sum of the previous two. This method is called:",
+                type: "multiple-choice",
+                options: ["Agile sequence", "Scrum numbers", "Fibonacci series method", "Planning scale"],
+                answer: "Fibonacci series method"
+            },
+            {
+                question: "Which of the following is NOT listed as a step in the Story Point's estimation approach?",
+                type: "multiple-choice",
+                options: ["Story size estimation", "Documentation writing", "Velocity estimation", "Overall project effort"],
+                answer: "Documentation writing"
+            },
+            {
+                question: "The most common method used for story size estimation is:",
+                type: "multiple-choice",
+                options: ["Expert opinion", "Time tracking", "Planning poker method", "Lines of code"],
+                answer: "Planning poker method"
+            },
+            {
+                question: "The COCOMO II method includes five different Scaling Factors (SFs). Which of the following is NOT one of them?",
+                type: "multiple-choice",
+                options: ["Precedentedness (PREC)", "Customer Satisfaction (CSAT)", "Process Flexibility (FLEX)", "Team Cohesion (TEAM)"],
+                answer: "Customer Satisfaction (CSAT)"
+            },
+            {
+                question: "In COCOMO II, each scaling factor is rated in how many levels?",
+                type: "multiple-choice",
+                options: ["3", "5", "6", "10"],
+                answer: "6"
+            },
+            {
+                question: "The early design model in COCOMO II includes the estimation of the project after:",
+                type: "multiple-choice",
+                options: ["Deployment", "Collecting the requirements", "Coding is complete", "Testing is finished"],
+                answer: "Collecting the requirements"
+            },
+            {
+                question: "Defuzzification is the process which refers to:",
+                type: "multiple-choice",
+                options: ["Converting crisp output to fuzzy output", "The collection of IF-THEN rules", "The transform of fuzzy output into crisp output", "Estimating effort"],
+                answer: "The transform of fuzzy output into crisp output"
+            },
+            {
+                question: "What is the Iteration Effort Estimation Model (IEEM)?",
+                type: "multiple-choice",
+                options: ["A sequential model that starts after the project architecture is defined", "A non-iterative model for effort estimation", "An iterative model that starts after the project architecture was defined in EEEM", "A model that only uses historical data"],
+                answer: "An iterative model that starts after the project architecture was defined in EEEM"
+            },
+             {
+                question: "What metrics are used in the Experimental Analysis section to measure error and prediction level?",
+                type: "multiple-choice",
+                options: ["Lines of Code (LOC) and Function Points (FP)", "Magnitude of Relative Error (MRE) and Prediction Level (PRED)", "Team Velocity and Sprint Burndown", "Customer Satisfaction and Return on Investment"],
+                answer: "Magnitude of Relative Error (MRE) and Prediction Level (PRED)"
+            },
+            {
+                question: "According to the conclusion, the use of fuzzy logic in the proposed model may:",
+                type: "multiple-choice",
+                options: ["Decrease the effort estimation", "Increase the effort estimation", "Have no impact on effort estimation", "Eliminate the need for estimation"],
+                answer: "Increase the effort estimation"
+            },
+             {
+                question: "The proposed model mentioned in the conclusion is expected to increase the value of PRED from 70% to:",
+                type: "multiple-choice",
+                options: ["75%", "80%", "85%", "90%"],
+                answer: "80%"
+            },
+            {
+                question: "What is one idea for future work mentioned in the document?",
+                type: "multiple-choice",
+                options: ["Using only one membership function", "Avoiding Neural-Fuzzy methods", "Using different membership function(s) and comparing between the produced efforts", "Decreasing the accuracy of effort estimation"],
+                answer: "Using different membership function(s) and comparing between the produced efforts"
+            },
+             {
+                question: "Another idea for future work is improving the proposed framework by utilizing a training algorithm like:",
+                type: "multiple-choice",
+                options: ["Decision Trees", "Linear Regression", "Genetic algorithms (GA) to tune the fuzzy sets parameters", "Neural Networks without fuzzy logic"],
+                answer: "Genetic algorithms (GA) to tune the fuzzy sets parameters"
+            },
+            {
+                question: "Extreme Programming (XP) is an agile software development framework that aims to produce:",
+                type: "multiple-choice",
+                options: ["Lower quality software", "Higher quality software, and higher quality of life for the development team", "More documentation", "Slower development cycles"],
+                answer: "Higher quality software, and higher quality of life for the development team"
+            },
+            {
+                question: "XP is the most specific of the agile frameworks regarding:",
+                type: "multiple-choice",
+                options: ["Project management techniques", "Appropriate engineering practices for software development", "Team size limitations", "Documentation requirements"],
+                answer: "Appropriate engineering practices for software development"
+            },
+            {
+                question: "The XP value of Communication emphasizes that most projects fail because of:",
+                type: "multiple-choice",
+                options: ["Lack of technical skills", "Poor communication", "Insufficient funding", "Changing requirements"],
+                answer: "Poor communication"
+            },
+             {
+                question: "The XP value of Simplicity suggests developing:",
+                type: "multiple-choice",
+                options: ["The most complex product possible", "The simplest product that meets the customer’s needs", "Products with many unnecessary features", "Products based on complex designs"],
+                answer: "The simplest product that meets the customer’s needs"
+            },
+             {
+                question: "The XP value of Feedback highlights that developers must obtain and value feedback from:",
+                type: "multiple-choice",
+                options: ["Only the project manager", "The customer, from the system, and from each other", "Only automated tools", "External consultants"],
+                answer: "The customer, from the system, and from each other"
+            },
+            {
+                question: "What is the purpose of the Planning Game in XP?",
+                type: "multiple-choice",
+                options: ["To determine team salaries", "To collaboratively plan using story cards", "To design the system architecture", "To conduct performance reviews"],
+                answer: "To collaboratively plan using story cards"
+            },
+            {
+                question: "In XP, small releases mean that development is divided into a sequence of small iterations, each implementing new features separately testable by:",
+                type: "multiple-choice",
+                options: ["The development team only", "The customer", "The project manager", "Automated tests only"],
+                answer: "The customer"
+            },
+            {
+                question: "XP accelerates software delivery by having short releases of:",
+                type: "multiple-choice",
+                options: ["1-2 weeks", "3-4 weeks", "1-2 months", "3-4 months"],
+                answer: "3-4 weeks"
+            },
+            {
+                question: "A metaphor in XP is used to:",
+                type: "multiple-choice",
+                options: ["Create complex analogies", "Express the overall way in which the system will operate and help visualize the project", "Document technical specifications", "Plan the project schedule"],
+                answer: "Express the overall way in which the system will operate and help visualize the project"
+            },
+            {
+                question: "XP requires programmers to use:",
+                type: "multiple-choice",
+                options: ["The most complex design possible", "The simplest possible design that will meet the current needs", "Designs created by a separate architecture team", "Designs based on extensive documentation"],
+                answer: "The simplest possible design that will meet the current needs"
+            },
+            {
+                question: "In XP Testing, who writes unit tests?",
+                type: "multiple-choice",
+                options: ["Customers", "Testers", "Programmers", "Project Managers"],
+                answer: "Programmers"
+            },
+            {
+                question: "Continuous Integration in XP means that code for each story is integrated into the evolving system:",
+                type: "multiple-choice",
+                options: ["Once a week", "At the end of the project", "As soon as it is ready, multiple times per day", "Only when all features are complete"],
+                answer: "As soon as it is ready, multiple times per day"
+            },
+             {
+                question: "Collective Code Ownership in XP means that:",
+                type: "multiple-choice",
+                options: ["Only one programmer owns a specific module", "All developers own and share code", "Code ownership is determined by the project manager", "External teams own the code"],
+                answer: "All developers own and share code"
+            },
+            {
+                question: "The XP practice of 40-Hour Weeks indicates that software developers should not work more than 40 hours per week because:",
+                type: "multiple-choice",
+                options: ["It saves on project costs", "People perform best and most creatively if they are rested, fresh, and healthy", "It allows for more documentation time", "It reduces the need for testing"],
+                answer: "People perform best and most creatively if they are rested, fresh, and healthy"
+            },
+            {
+                question: "An On-Site Customer in XP:",
+                type: "multiple-choice",
+                options: ["Only provides requirements at the beginning of the project", "Works with the development team at all times to answer questions, perform acceptance tests, and ensure development is progressing as expected", "Only interacts with the project manager", "Reviews the final product only"],
+                answer: "Works with the development team at all times to answer questions, perform acceptance tests, and ensure development is progressing as expected"
+            },
+            {
+                question: "Coding Standards in XP indicate that developers must agree on:",
+                type: "multiple-choice",
+                options: ["Individual coding styles", "A common set of rules enforcing how the system shall be coded", "The best programming language", "The number of code comments"],
+                answer: "A common set of rules enforcing how the system shall be coded"
+            },
+            {
+                question: "According to the document, one limitation of XP is that it:",
+                type: "multiple-choice",
+                options: ["Encourages documentation", "Lacks scalability to large project teams, large software products, etc.", "Focuses too much on detailed design", "Is suitable for distributed teams"],
+                answer: "Lacks scalability to large project teams, large software products, etc."
+            },
+            {
+                question: "A strength of Scrum mentioned is that it:",
+                type: "multiple-choice",
+                options: ["Does not focus on project management", "Allows large teams to work like small teams by dividing work into pieces, proceeding in parallel but synchronizing continuously, stabilizing in increments, and continuously finding and fixing problems", "Requires collocated teams only", "Focuses heavily on detailed development process"],
+                answer: "Allows large teams to work like small teams by dividing work into pieces, proceeding in parallel but synchronizing continuously, stabilizing in increments, and continuously finding and fixing problems"
+            },
+            {
+                question: "A limitation of Scrum mentioned is that it:",
+                type: "multiple-choice",
+                options: ["Focuses too much on the development process", "Requires collocated teams", "Does not focus on development process", "Lacks project management techniques"],
+                answer: "Does not focus on development process"
+            },
+            {
+                question: "The proposed framework mentioned aims to utilize the merits of Agile methodologies in the management and development of:",
+                type: "multiple-choice",
+                options: ["Small, independent projects", "E-government projects", "Hardware development", "Waterfall projects"],
+                answer: "E-government projects"
+            },
+            {
+                question: "Agile SPM (Software Project Management) has a role in dealing with large projects on the:",
+                type: "multiple-choice",
+                options: ["Detailed coding level", "High level of management", "Testing phase only", "Individual task level"],
+                answer: "High level of management"
+            },
+             {
+                question: "Agile requirement refinery includes four stages: Vision, Theme, Concept, and:",
+                type: "multiple-choice",
+                options: ["Coding", "Testing", "Deployment", "Requirements Definition"],
+                answer: "Requirements Definition"
+            },
+            {
+                question: "What does the Scope dimension of the 4-Dimensional Analytical Tools (DAT) check?",
+                type: "multiple-choice",
+                options: ["Agile values", "Software process", "The support of a method in terms of Project size, Team size, Development style, Code style, Technology environment, Physical environment, Business culture", "Testing techniques"],
+                answer: "The support of a method in terms of Project size, Team size, Development style, Code style, Technology environment, Physical environment, Business culture"
+            },
+             {
+                question: "The Agile values dimension of 4-DAT checks the existence of agility in agile methods at:",
+                type: "multiple-choice",
+                options: ["Only the practice level", "Only the process level", "Both a process and practice levels", "The management level only"],
+                answer: "Both a process and practice levels"
+            },
+             {
+                question: "The scenario presented for the search GUI module using 4-DAT concluded that the appropriate methodology was:",
+                type: "multiple-choice",
+                options: ["SCRUM", "XP", "Waterfall", "DSDM"],
+                answer: "XP"
+            },
+             {
+                question: "The scenario presented for the search coding and testing using 4-DAT concluded that the appropriate methodology was:",
+                type: "multiple-choice",
+                options: ["XP", "SCRUM", "Waterfall", "DSDM"],
+                answer: "SCRUM"
+            },
+             {
+                question: "Requirement Engineering (RE) refers to the process of:",
+                type: "multiple-choice",
+                options: ["Only coding", "Defining, documenting, and maintaining requirements in the engineering design process", "Only testing", "Deploying software"],
+                answer: "Defining, documenting, and maintaining requirements in the engineering design process"
+            },
+            {
+                question: "The Requirement Engineering Process is a four-step process which includes: Feasibility Study, Requirement Elicitation and Analysis, Software Requirement Specification, Software Requirement Validation, and:",
+                type: "multiple-choice",
+                options: ["Coding", "Software Requirement Management", "Deployment", "Testing"],
+                answer: "Software Requirement Management"
+            },
+            {
+                question: "What is the objective behind the feasibility study in Requirement Engineering?",
+                type: "multiple-choice",
+                options: ["To develop the software", "To create the reasons for developing the software that is acceptable to users, flexible to change and conformable to established standards", "To test the software", "To document the code"],
+                answer: "To create the reasons for developing the software that is acceptable to users, flexible to change and conformable to established standards"
+            },
+            {
+                question: "Technical Feasibility evaluates:",
+                type: "multiple-choice",
+                options: ["The financial profit of the software", "The current technologies needed to accomplish customer requirements within the time and budget", "How well the software solves business problems", "User acceptance"],
+                answer: "The current technologies needed to accomplish customer requirements within the time and budget"
+            },
+            {
+                question: "Operational Feasibility assesses:",
+                type: "multiple-choice",
+                options: ["The technical challenges", "The financial viability", "The range in which the required software performs a series of levels to solve business problems and customer requirements", "The design of the user interface"],
+                answer: "The range in which the required software performs a series of levels to solve business problems and customer requirements"
+            },
+             {
+                question: "Economic Feasibility decides:",
+                type: "multiple-choice",
+                options: ["The technical requirements", "Whether the necessary software can generate financial profits for an organization", "The operational efficiency", "The user interface design"],
+                answer: "Whether the necessary software can generate financial profits for an organization"
+            },
+            {
+                question: "Requirement Elicitation and Analysis is also known as:",
+                type: "multiple-choice",
+                options: ["Software design", "The gathering of requirements", "Software testing", "Deployment"],
+                answer: "The gathering of requirements"
+            },
+             {
+                question: "A problem of Elicitation and Analysis mentioned is that stakeholders often:",
+                type: "multiple-choice",
+                options: ["Know exactly what they want", "Don't know what they want", "Agree on all requirements", "Provide detailed specifications"],
+                answer: "Don't know what they want"
+            },
+             {
+                question: "What is Testing?",
+                type: "multiple-choice",
+                options: ["The process of writing code", "The process of evaluating a system or its component(s) with the intent to find whether it satisfies the specified requirements or not", "The process of creating documentation", "The process of deploying software"],
+                answer: "The process of evaluating a system or its component(s) with the intent to find whether it satisfies the specified requirements or not"
+            },
+             {
+                question: "According to ANSI/IEEE 1059 standard, Testing can be defined as:",
+                type: "multiple-choice",
+                options: ["A process of writing code", "A process of analyzing a software item to detect the differences between existing and required conditions and to evaluate the features of the software item", "A process of managing projects", "A process of designing databases"],
+                answer: "A process of analyzing a software item to detect the differences between existing and required conditions and to evaluate the features of the software item"
+            },
+             {
+                question: "In the IT industry, large companies often have a team with responsibilities to:",
+                type: "multiple-choice",
+                options: ["Write all the code", "Evaluate the developed software in context of the given requirements", "Market the software", "Design the hardware"],
+                answer: "Evaluate the developed software in context of the given requirements"
+            },
+            {
+                question: "When can testing be started in the Software Development Life Cycle (SDLC)?",
+                type: "multiple-choice",
+                options: ["Only in the testing phase", "Only after coding is complete", "From the Requirements Gathering phase and continued till the deployment of the software", "Only after deployment"],
+                answer: "From the Requirements Gathering phase and continued till the deployment of the software"
+            },
+             {
+                question: "In the Waterfall model, formal testing is conducted:",
+                type: "multiple-choice",
+                options: ["At the beginning of the project", "Continuously throughout the project", "In the testing phase", "After deployment"],
+                answer: "In the testing phase"
+            },
+            {
+                question: "In the incremental model, testing is performed:",
+                type: "multiple-choice",
+                options: ["Only at the very end", "At the end of every increment/iteration and the whole application is tested at the end", "Only at the beginning", "Only by the customer"],
+                answer: "At the end of every increment/iteration and the whole application is tested at the end"
+            },
+            {
+                question: "Reviewing the design in the design phase with the intent to improve the design is also considered as:",
+                type: "multiple-choice",
+                options: ["Coding", "Testing", "Documentation", "Planning"],
+                answer: "Testing"
+            },
+            {
+                question: "Which of the following is NOT listed as an aspect to consider for stopping the testing process?",
+                type: "multiple-choice",
+                options: ["Testing Deadlines", "Unlimited time and resources", "Completion of test case execution", "Management decision"],
+                answer: "Unlimited time and resources"
+            },
+             {
+                question: "Verification addresses the concern:",
+                type: "multiple-choice",
+                options: ["\"Are you building the right thing?\"", "\"Are you building it right?\"", "\"Is the customer happy?\"", "\"Is the project on schedule?\""],
+                answer: "\"Are you building it right?\""
+            },
+             {
+                question: "Validation addresses the concern:",
+                type: "multiple-choice",
+                options: ["\"Are you building it right?\"", "\"Are you building the right thing?\"", "\"Is the code efficient?\"", "\"Is the documentation complete?\""],
+                answer: "\"Are you building the right thing?\""
+            },
+            {
+                question: "Who typically performs Verification?",
+                type: "multiple-choice",
+                options: ["Testers", "Customers", "Developers", "Project Managers"],
+                answer: "Developers"
+            },
+            {
+                question: "Who typically performs Validation?",
+                type: "multiple-choice",
+                options: ["Developers", "Project Managers", "Testers", "Customers"],
+                answer: "Testers"
+            },
+            {
+                question: "Verification has what type of activities?",
+                type: "multiple-choice",
+                options: ["Dynamic activities", "Subjective activities", "Static activities", "Random activities"],
+                answer: "Static activities"
+            },
+            {
+                question: "Validation has what type of activities?",
+                type: "multiple-choice",
+                options: ["Static activities", "Objective activities", "Random activities", "Dynamic activities"],
+                answer: "Dynamic activities"
+            },
+            {
+                question: "Which Validation Method is suitable for date & numeric data type and checks whether data is within given values?",
+                type: "multiple-choice",
+                options: ["Length check", "Type check", "Range check", "Presence check"],
+                answer: "Range check"
+            },
+            {
+                question: "Which Validation Method checks if the input data contain the required number of characters?",
+                type: "multiple-choice",
+                options: ["Format check", "Length check", "Limit check", "Lookup check"],
+                answer: "Length check"
+            },
+            {
+                question: "Which Validation Method checks that the input data does not contain invalid characters?",
+                type: "multiple-choice",
+                options: ["Type check", "Presence check", "Check digit", "Range check"],
+                answer: "Type check"
+            },
+            {
+                question: "Which Validation Method checks that data is in a specific format?",
+                type: "multiple-choice",
+                options: ["Range check", "Length check", "Format check", "Type check"],
+                answer: "Format check"
+            },
+            {
+                question: "Which Validation Method is similar to range check except that only one of the boundaries is checked?",
+                type: "multiple-choice",
+                options: ["Limit check", "Presence check", "Lookup check", "Check digit"],
+                answer: "Limit check"
+            },
+             {
+                question: "Which Validation Method checks if data is actually present and has not been missed out?",
+                type: "multiple-choice",
+                options: ["Limit check", "Presence check", "Lookup check", "Format check"],
+                answer: "Presence check"
+            },
+            {
+                question: "Which Validation Method takes the entered data item and compares it to a list of valid entries that are stored in a database table?",
+                type: "multiple-choice",
+                options: ["Range check", "Length check", "Type check", "Lookup check"],
+                answer: "Lookup check"
+            },
+            {
+                question: "Which Validation Method is suitable for a Barcode only and looks at an extra digit calculated from the digits of a number?",
+                type: "multiple-choice",
+                options: ["Presence check", "Lookup check", "Check digit", "Limit check"],
+                answer: "Check digit"
+            },
+             {
+                question: "Which Verification Method involves entering data twice, sometimes by different operators, and the system comparing both entries?",
+                type: "multiple-choice",
+                options: ["Screen/visual check", "Double entry", "Check digit", "Lookup check"],
+                answer: "Double entry"
+            },
+             {
+                question: "Which Verification Method is a manual check completed by the user who is entering the data, where the data is displayed on the screen for confirmation?",
+                type: "multiple-choice",
+                options: ["Double entry", "Check digit", "Screen/visual check", "Range check"],
+                answer: "Screen/visual check"
+            },
+            {
+                question: "What type of testing is performed by developers before the setup is handed over to the testing team?",
+                type: "multiple-choice",
+                options: ["Integration Testing", "System Testing", "Unit Testing", "Alpha Testing"],
+                answer: "Unit Testing"
+            },
+            {
+                question: "Testing of combined parts of an application to determine if they function correctly is called:",
+                type: "multiple-choice",
+                options: ["Unit Testing", "Integration Testing", "System Testing", "Regression Testing"],
+                answer: "Integration Testing"
+            },
+            {
+                question: "Testing the system as a whole after all components are integrated to see that it meets specified Quality Standards is called:",
+                type: "multiple-choice",
+                options: ["Unit Testing", "Integration Testing", "System Testing", "Beta Testing"],
+                answer: "System Testing"
+            },
+            {
+                question: "Testing performed to verify that a fixed bug hasn't resulted in another functionality or business rule violation is called:",
+                type: "multiple-choice",
+                options: ["Unit Testing", "Integration Testing", "Regression Testing", "Alpha Testing"],
+                answer: "Regression Testing"
+            },
+             {
+                question: "The Agile Manifesto values processes and tools over individuals and interactions.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Working product is valued over comprehensive documentation in the Agile Manifesto.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Responding to change is valued over following a plan in the Agile Manifesto.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "Agile processes are typically sequential and rigid.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Agile development encourages welcoming changing requirements, even late in development.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Business people and developers should work together daily throughout an Agile project.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Building projects around unmotivated individuals is a key Agile principle.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Detailed documentation is the most efficient method of conveying information in Agile teams.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The art of simplicity in Agile is maximizing the amount of work done.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The best architectures, requirements, and designs emerge from centralized, command-and-control teams.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Agile iteration cycles are typically from one to six months.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Agile development is generally non-adaptive to emergent risks.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The incremental nature of agile development makes it harder to identify issues early.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Extreme Programming (XP) is more focusing on project management process.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The Scrum Master is responsible for creating and prioritizing the Product Backlog.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The size of a Scrum team is ideally fixed at exactly 10 persons.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Scrum is a method suitable for Distributed teams.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Agile methods are generally easy to scale up to very large projects without additional considerations.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "One large-scale agile challenge is increased maintenance effort with more releases.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Detailed dependencies are easily discovered in large-scale agile projects due to a strong focus on upfront design.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "The proposed effort estimation framework mentioned in the document is based solely on the COCOMO II method.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Agile software development is an iterative and incremental approach.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "The COCOMO model is one of the least used software estimation models.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Story points are a measuring unit to estimate the time spent on a task.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The Fibonacci series method is sometimes used to express story points.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Planning poker is a common method for story size estimation.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "The COCOMO II scaling factors are rated on a binary scale (Yes/No).",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The early design model in COCOMO II focuses on project details after the overall architecture is developed.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "A fuzzy inference engine is a collection of IF-THEN rules.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "Defuzzification converts crisp output into fuzzy output.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The Iteration Effort Estimation Model (IEEM) is an iterative model.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "The use of fuzzy logic in the proposed model may decrease effort estimation accuracy.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "XP takes an 'extreme' approach to sequential development.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "In XP, new versions may be built several times per month.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "All tests must be run for every build in XP, and the build is only accepted if tests run successfully.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "The XP value of Courage means being prepared to avoid hard decisions.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Refactoring should change the functionality of the system.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Automated testing simplifies refactoring in XP.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Writing tests before code in XP clarifies the requirements to be implemented.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "In XP, programmers work in isolation to maximize individual productivity.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Pair programming serves as an informal review process in XP.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "Development productivity with pair programming is significantly lower than two people working independently.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "User story cards are an XP Document.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "CRC cards are a brainstorming tool used in the design of object-oriented software.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Customer acceptance tests are an XP Document.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Visible Wall Graphs are an XP Document.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "In XP, the Manager's role includes teaching team members about the XP process.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "The XP Tracker is typically a manager.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "The XP Customer writes tests and acceptance tests.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "The XP practice \"Sit together\" means the team develops in separate offices.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "An Informative workspace in XP involves placing visible wall graphs around the workspace.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "The XP practice of Slack means planning only high-priority tasks in every iteration.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "In XP, Daily Meetings are typically held with the team sitting down for a long duration.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Continuous integration in XP means integrating code once per week.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "One advantage of the XP approach is that it is designed for use in an environment of rapidly changing requirements.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "XP helps to increase the cost of changes by being less flexible to changing requirements.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The focus on small and incremental release in XP decreases the risks of the project.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Continuous testing and integration in XP enables the team to decrease the quality of the new software.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Pair programming in XP decreases the possibility of gaining defective software.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Refactoring in XP enables the team to decrease the effectiveness of the software.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Scrum is a method suitable for large teams of more than 20 persons.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Scrum focuses heavily on the detailed development process.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "The 4-Dimensional Analytical Tools (DAT) include a dimension for \"Waterfall Values\".",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "The Agile values dimension in 4-DAT is a qualitative dimension.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Requirement Engineering provides the appropriate mechanism to understand what the customer desires.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Stakeholders always know exactly what they want during Requirement Elicitation and Analysis.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Stakeholders may have conflicting requirements.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Testing is the process of writing code.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Developers never conduct testing.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "An early start to testing reduces the cost and time to rework.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "In the Waterfall model, testing can be started from the requirements gathering phase.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "It is easy to determine when to stop testing, as software can be 100% tested.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Verification checks if you are building the right thing.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Validation checks if you are building it right.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Verification occurs after validation.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Validation has static activities.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "A Range Check is suitable for text data type.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "A Length Check is suitable for date data type.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "A Type Check checks that the input data does not contain invalid characters.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "A Format Check is suitable for a numeric data type.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "A Limit Check is similar to a range check but checks only one boundary.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "A Presence Check is suitable for primary keys.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "A Lookup Check compares entered data to a list of valid entries stored in a database table.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "A Check Digit is suitable for a Barcode only.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Double Entry is a verification method where data is entered once.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "A Screen/visual check is an automated verification method.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Black-box testing requires knowledge of the interior workings and source code of the application.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "White-box testing is also called glass testing or open-box testing.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "Grey-box testing involves testing with a limited knowledge of the internal workings of an application.",
+                type: "true-false",
+                answer: "True"
+            },
+             {
+                question: "In grey-box testing, the tester has no access to design documents.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Functional Testing is a type of white-box testing.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Functional testing is based on the specifications of the software.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Unit testing is performed by the testing team before handing over to developers.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "The goal of unit testing is to integrate all parts of the program.",
+                type: "true-false",
+                answer: "False"
+            },
+             {
+                question: "Integration testing is defined as testing individual units of source code.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Top-down integration testing begins with unit testing.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "System testing tests individual components of the system.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Regression testing is performed to ensure that a change hasn't introduced new faults.",
+                type: "true-false",
+                answer: "True"
+            },
+            {
+                question: "Alpha testing is the first stage of testing and is performed by a sample of the intended audience.",
+                type: "true-false",
+                answer: "False"
+            },
+            {
+                question: "Non-functional testing includes aspects like performance, security, and usability.",
+                type: "true-false",
+                answer: "True"
+            }
+            // Add the rest of the questions here following the same structure
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+
+        // Function to display questions
+        function displayQuiz() {
+            quizData.forEach((qData, index) => {
+                // Create question block
+                const questionBlock = document.createElement('div');
+                questionBlock.classList.add('question-block');
+                questionBlock.setAttribute('data-question-index', index); // Link block to question index
+
+                // Create question text
+                const questionText = document.createElement('p');
+                questionText.classList.add('question-text');
+                questionText.textContent = `${index + 1}. ${qData.question}`; // Add question number
+                questionBlock.appendChild(questionText);
+
+                // Create options container
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+                if (qData.type === 'true-false') {
+                    optionsDiv.classList.add('true-false');
+                }
+
+
+                // Create buttons for each option
+                 if (qData.type === 'multiple-choice') {
+                    qData.options.forEach(option => {
+                        const button = document.createElement('button');
+                        button.textContent = option;
+                        button.addEventListener('click', handleAnswer);
+                        optionsDiv.appendChild(button);
+                    });
+                 } else if (qData.type === 'true-false') {
+                    const trueButton = document.createElement('button');
+                    trueButton.textContent = 'True';
+                    trueButton.addEventListener('click', handleAnswer);
+                    optionsDiv.appendChild(trueButton);
+
+                    const falseButton = document.createElement('button');
+                    falseButton.textContent = 'False';
+                    falseButton.addEventListener('click', handleAnswer);
+                    optionsDiv.appendChild(falseButton);
+                 }
+
+
+                questionBlock.appendChild(optionsDiv);
+
+                // Create feedback element (initially hidden)
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.classList.add('feedback');
+                questionBlock.appendChild(feedbackDiv);
+
+                // Add the complete question block to the container
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+
+        // Function to handle answer selection
+        function handleAnswer(event) {
+            const selectedButton = event.target;
+            const selectedAnswer = selectedButton.textContent;
+            const questionBlock = selectedButton.closest('.question-block');
+            const questionIndex = parseInt(questionBlock.getAttribute('data-question-index'), 10);
+            const correctAnswer = quizData[questionIndex].answer;
+            const feedbackDiv = questionBlock.querySelector('.feedback');
+            const optionButtons = questionBlock.querySelectorAll('.options button');
+
+            // Disable all buttons for this question
+            optionButtons.forEach(button => {
+                button.disabled = true;
+                 // Remove hover effect possibility by removing the listener indirectly (though disabled is enough)
+            });
+
+            // Mark the selected button
+            selectedButton.classList.add('selected');
+
+            // Check if the answer is correct
+            if (selectedAnswer === correctAnswer) {
+                selectedButton.classList.add('correct');
+                feedbackDiv.textContent = 'Correct!';
+                feedbackDiv.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedbackDiv.textContent = `Incorrect. The correct answer is: ${correctAnswer}`;
+                feedbackDiv.classList.add('incorrect');
+
+                // Highlight the correct answer button
+                 optionButtons.forEach(button => {
+                    if (button.textContent === correctAnswer) {
+                        button.classList.add('reveal-correct');
+                    }
+                });
+            }
+        }
+
+        // Initial call to display the quiz when the page loads
+        displayQuiz();
+
+    </script>
+
+</body>
+</html>
